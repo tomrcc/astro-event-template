@@ -1,0 +1,28 @@
+---
+import type { BlockProps } from '../../content.config';
+import { getCollection } from 'astro:content';
+
+type Props = BlockProps<'schedule'>;
+
+const { heading, sessions } = Astro.props;
+const speakers = await getCollection('speakers');
+const speakerName = (slug: string | null | undefined) => speakers.find((entry) => entry.id === slug)?.data.name;
+---
+<section class="section" id="schedule">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	<ol class="schedule" data-editable="array" data-prop="sessions">
+		{(sessions ?? []).map((session) => (
+			<li class="session" data-editable="array-item">
+				<span class="session-time" data-editable="text" data-prop="time">{session.time}</span>
+				<div>
+					<h3 data-editable="text" data-prop="title">{session.title}</h3>
+					{speakerName(session.speaker) && (
+						<a class="session-speaker" href={`/speakers/${session.speaker}/`}>{speakerName(session.speaker)}</a>
+					)}
+					{session.description && <p data-editable="text" data-prop="description">{session.description}</p>}
+				</div>
+				{session.location && <span class="session-location" data-editable="text" data-prop="location">{session.location}</span>}
+			</li>
+		))}
+	</ol>
+</section>

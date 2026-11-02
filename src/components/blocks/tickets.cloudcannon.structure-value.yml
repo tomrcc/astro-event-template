@@ -1,0 +1,36 @@
+label: Tickets
+icon: confirmation_number
+picker_preview:
+  text:
+    - Tickets
+  icon:
+    - confirmation_number
+preview:
+  text:
+    - key: heading
+    - Tickets
+  icon:
+    - confirmation_number
+value:
+  _type: tickets
+  heading: Tickets
+  intro:
+  seats_label: '{count} seats left'
+  sold_out_label: Sold out
+  tiers: []
+_inputs:
+  heading:
+    type: text
+  intro:
+    type: textarea
+  seats_label:
+    type: text
+    label: Seats left wording
+    comment: '{count} is replaced with the live number of seats.'
+  sold_out_label:
+    type: text
+    label: Sold out wording
+  tiers:
+    type: array
+    options:
+      structures: _structures.tiers

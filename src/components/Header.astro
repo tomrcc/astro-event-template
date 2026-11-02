@@ -1,0 +1,18 @@
+---
+import site from '../data/site.json';
+---
+<header class="site-header">
+	<a class="site-title" href="/" data-editable="text" data-prop="@data[site].title">{site.title}</a>
+	<nav aria-label="Main">
+		<ul class="nav-links" data-editable="array" data-prop="@data[site].nav">
+			{site.nav.map((link) => (
+				<li data-editable="array-item">
+					<a href={link.url || '/'} data-editable="text" data-prop="label">{link.label}</a>
+				</li>
+			))}
+		</ul>
+	</nav>
+	{site.cta.label?.trim() && (
+		<a class="button button-small" href={site.cta.url || '/'} data-editable="text" data-prop="@data[site].cta.label">{site.cta.label}</a>
+	)}
+</header>

@@ -1,0 +1,22 @@
+---
+import site from '../data/site.json';
+import event from '../data/event.json';
+---
+<footer class="site-footer">
+	<div>
+		<p class="footer-event" data-editable="text" data-prop="@data[event].name">{event.name}</p>
+		<p>
+			<span data-editable="text" data-prop="@data[event].date">{event.date}</span><br />
+			<span data-editable="text" data-prop="@data[event].venue">{event.venue}</span>,
+			<span data-editable="text" data-prop="@data[event].address">{event.address}</span>
+		</p>
+	</div>
+	<p data-editable="text" data-prop="@data[site].footer_text">{site.footer_text}</p>
+	<ul class="footer-links" data-editable="array" data-prop="@data[site].footer_links">
+		{site.footer_links.map((link) => (
+			<li data-editable="array-item">
+				<a href={link.url || '/'} data-editable="text" data-prop="label">{link.label}</a>
+			</li>
+		))}
+	</ul>
+</footer>

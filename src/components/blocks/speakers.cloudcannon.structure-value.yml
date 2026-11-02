@@ -1,0 +1,34 @@
+label: Speakers
+icon: groups
+picker_preview:
+  text:
+    - Speakers
+  icon:
+    - groups
+preview:
+  text:
+    - key: heading
+    - Speakers
+  icon:
+    - groups
+value:
+  _type: speakers
+  heading: Speakers
+  intro:
+  speakers: []
+_inputs:
+  heading:
+    type: text
+  intro:
+    type: textarea
+  speakers:
+    type: multiselect
+    comment: Shown in this order. Add people in the Speakers collection first.
+    options:
+      values: collections.speakers
+      value_key: filename_without_ext
+      preview:
+        text:
+          - key: name
+        image:
+          - key: photo

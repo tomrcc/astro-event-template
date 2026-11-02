@@ -1,0 +1,11 @@
+{
+  "greeting": "Hi! Ask me anything about the conference: tickets, the schedule, the venue or the speakers.",
+  "placeholder": "Ask a question…",
+  "suggestions": [
+    "When do doors open?",
+    "Is there a student discount?",
+    "How do I get to the venue?"
+  ],
+  "unavailable_message": "The assistant isn't available right now. Try the FAQ, or get in touch through the contact page.",
+  "instructions": "Be warm and brief. If someone asks about refunds, point them to the contact page."
+}

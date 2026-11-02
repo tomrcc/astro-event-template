@@ -1,0 +1,24 @@
+label: FAQ
+icon: help
+picker_preview:
+  text:
+    - FAQ
+  icon:
+    - help
+preview:
+  text:
+    - key: heading
+    - FAQ
+  icon:
+    - help
+value:
+  _type: faq
+  heading: Questions
+  items: []
+_inputs:
+  heading:
+    type: text
+  items:
+    type: array
+    options:
+      structures: _structures.faq_items

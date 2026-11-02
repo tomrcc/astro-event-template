@@ -1,0 +1,103 @@
+---
+import type { BlockProps } from '../../content.config';
+import ServerPreview from '../server/ServerPreview.astro';
+import chat from '../../data/chat.json';
+
+type Props = BlockProps<'assistant'>;
+
+const { heading, intro } = Astro.props;
+---
+<section class="section assistant" data-assistant data-unavailable={chat.unavailable_message}>
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	{intro && <p class="section-intro" data-editable="text" data-prop="intro">{intro}</p>}
+	<div class="chat-panel">
+		<ServerPreview note="On the live site, an AI model answers from this site's content. Sending is off in the editor." />
+		<ol class="chat-log" aria-live="polite">
+			<li class="chat-message is-assistant" data-editable="text" data-prop="@data[chat].greeting">{chat.greeting}</li>
+		</ol>
+		<div class="chat-suggestions" data-editable="array" data-prop="@data[chat].suggestions">
+			{chat.suggestions.map((suggestion) => (
+				<button type="button" class="chip" data-editable="array-item" data-suggestion>
+					<editable-text data-prop="">{suggestion}</editable-text>
+				</button>
+			))}
+			<template>
+				<button type="button" class="chip" data-editable="array-item" data-suggestion>
+					<editable-text data-prop=""></editable-text>
+				</button>
+			</template>
+		</div>
+		<form class="chat-form">
+			<input name="message" maxlength="500" required autocomplete="off" aria-label={chat.placeholder} placeholder={chat.placeholder} />
+			<button class="button">Send</button>
+		</form>
+	</div>
+</section>
+
+<script>
+	type Message = { role: 'user' | 'assistant'; content: string };
+
+	document.querySelectorAll<HTMLElement>('[data-assistant]').forEach((root) => {
+		const form = root.querySelector<HTMLFormElement>('.chat-form')!;
+		const log = root.querySelector('.chat-log')!;
+		const unavailable = root.dataset.unavailable ?? '';
+		const history: Message[] = [];
+		let busy = false;
+
+		function add(role: Message['role'], text = '') {
+			const item = document.createElement('li');
+			item.className = `chat-message is-${role}`;
+			item.textContent = text;
+			log.append(item);
+			item.scrollIntoView({ block: 'nearest' });
+			return item;
+		}
+
+		async function send(text: string) {
+			const message = text.trim();
+			if (!message || busy) return;
+			busy = true;
+			form.toggleAttribute('aria-busy', true);
+			add('user', message);
+			history.push({ role: 'user', content: message });
+			const reply = add('assistant');
+			reply.classList.add('is-pending');
+			try {
+				// An odd count keeps the history starting on a user message.
+				const response = await fetch('/api/chat', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ messages: history.slice(-11) }),
+				});
+				if (!response.ok || !response.body) throw new Error(`Chat failed: ${response.status}`);
+				const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+				for (;;) {
+					const { done, value } = await reader.read();
+					if (done) break;
+					reply.textContent += value;
+				}
+				if (!reply.textContent) throw new Error('Empty reply');
+				history.push({ role: 'assistant', content: reply.textContent });
+			} catch {
+				reply.textContent = unavailable;
+				history.pop();
+			} finally {
+				reply.classList.remove('is-pending');
+				form.toggleAttribute('aria-busy', false);
+				busy = false;
+			}
+		}
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			if (window.inEditorMode) return;
+			const message = new FormData(form).get('message') as string;
+			form.reset();
+			send(message);
+		});
+
+		root.querySelectorAll<HTMLButtonElement>('[data-suggestion]').forEach((button) => {
+			button.addEventListener('click', () => !window.inEditorMode && send(button.textContent ?? ''));
+		});
+	});
+</script>

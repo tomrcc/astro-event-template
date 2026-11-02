@@ -1,0 +1,24 @@
+label: Schedule
+icon: schedule
+picker_preview:
+  text:
+    - Schedule
+  icon:
+    - schedule
+preview:
+  text:
+    - key: heading
+    - Schedule
+  icon:
+    - schedule
+value:
+  _type: schedule
+  heading: Schedule
+  sessions: []
+_inputs:
+  heading:
+    type: text
+  sessions:
+    type: array
+    options:
+      structures: _structures.sessions

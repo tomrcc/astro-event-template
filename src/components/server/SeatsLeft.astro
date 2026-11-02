@@ -1,0 +1,8 @@
+---
+import SeatsLeftView from './SeatsLeftView.astro';
+import { getSeatsLeft } from '../../lib/ticketing';
+
+const { seats_label, sold_out_label } = Astro.props;
+const seats = await getSeatsLeft();
+---
+<SeatsLeftView seats={seats} seats_label={seats_label} sold_out_label={sold_out_label} />

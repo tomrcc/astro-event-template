@@ -1,0 +1,44 @@
+---
+import type { BlockProps } from '../../content.config';
+import ServerPreview from '../server/ServerPreview.astro';
+
+type Props = BlockProps<'enquiry'>;
+
+const { heading, intro, name_label, email_label, message_label, button_label, success_message, error_message } = Astro.props;
+---
+<section class="section enquiry">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	{intro && <p class="section-intro" data-editable="text" data-prop="intro">{intro}</p>}
+	<form class="enquiry-form" data-enquiry data-success={success_message} data-error={error_message}>
+		<ServerPreview note="On the live site, the server sends messages on to the team. Sending is off in the editor." />
+		<label>
+			<span data-editable="text" data-prop="name_label">{name_label}</span>
+			<input name="name" required maxlength="200" autocomplete="name" />
+		</label>
+		<label>
+			<span data-editable="text" data-prop="email_label">{email_label}</span>
+			<input name="email" type="email" required autocomplete="email" />
+		</label>
+		<label>
+			<span data-editable="text" data-prop="message_label">{message_label}</span>
+			<textarea name="message" required maxlength="2000" rows="5"></textarea>
+		</label>
+		<button class="button" data-editable="text" data-prop="button_label">{button_label}</button>
+		<p class="form-status" role="status"></p>
+	</form>
+</section>
+
+<script>
+	import { actions } from 'astro:actions';
+
+	document.querySelectorAll<HTMLFormElement>('[data-enquiry]').forEach((form) => {
+		const status = form.querySelector('.form-status')!;
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			if (window.inEditorMode) return;
+			const { error } = await actions.enquire(new FormData(form));
+			status.textContent = (error ? form.dataset.error : form.dataset.success) ?? '';
+			if (!error) form.reset();
+		});
+	});
+</script>

@@ -1,0 +1,24 @@
+label: Chat assistant
+icon: chat
+picker_preview:
+  text:
+    - Chat assistant
+  subtext:
+    - Answers visitors' questions from the site's content
+  icon:
+    - chat
+preview:
+  text:
+    - key: heading
+    - Chat assistant
+  icon:
+    - chat
+value:
+  _type: assistant
+  heading: Ask the assistant
+  intro:
+_inputs:
+  heading:
+    type: text
+  intro:
+    type: textarea

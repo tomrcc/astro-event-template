@@ -1,0 +1,13 @@
+---
+interface Props {
+	seats: number | null;
+	seats_label?: string | null;
+	sold_out_label?: string | null;
+}
+const { seats, seats_label, sold_out_label } = Astro.props;
+---
+{seats !== null && (
+	<p class:list={['seats-left', { 'is-sold-out': seats <= 0 }]}>
+		{seats > 0 ? (seats_label || '{count} seats left').replace('{count}', String(seats)) : sold_out_label || 'Sold out'}
+	</p>
+)}

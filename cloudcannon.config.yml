@@ -1,0 +1,319 @@
+timezone: Pacific/Auckland
+
+paths:
+  static: public
+  uploads: public/images
+
+collections_config:
+  pages:
+    path: src/content/pages
+    url: /[slug]/
+    icon: wysiwyg
+    _enabled_editors:
+      - visual
+      - content
+      - data
+    schemas:
+      default:
+        path: .cloudcannon/schemas/page.md
+        name: Text page
+        icon: article
+      page_builder:
+        path: .cloudcannon/schemas/page-builder.md
+        name: Page builder
+        icon: dashboard
+        new_preview_url: /contact/
+    add_options:
+      - name: Page builder
+        schema: page_builder
+        icon: dashboard
+      - name: Text page
+        schema: default
+        icon: article
+        editor: content
+  speakers:
+    path: src/content/speakers
+    url: /speakers/[slug]/
+    icon: record_voice_over
+    _enabled_editors:
+      - visual
+      - content
+      - data
+    schemas:
+      default:
+        path: .cloudcannon/schemas/speaker.md
+        name: Speaker
+        icon: person
+    add_options:
+      - name: Speaker
+        schema: default
+        icon: person
+        editor: content
+    preview:
+      text:
+        - key: name
+      subtext:
+        - key: company
+      image:
+        - key: photo
+  data:
+    path: src/data
+    name: Site settings
+    icon: settings
+    glob:
+      - '*.json'
+    disable_url: true
+    disable_add: true
+    disable_file_actions: true
+    _enabled_editors:
+      - data
+
+collection_groups:
+  - heading: Content
+    collections:
+      - pages
+      - speakers
+  - heading: Settings
+    collections:
+      - data
+
+data_config:
+  site:
+    path: src/data/site.json
+  event:
+    path: src/data/event.json
+  chat:
+    path: src/data/chat.json
+
+_editables:
+  content:
+    bold: true
+    italic: true
+    link: true
+    bulletedlist: true
+    numberedlist: true
+    blockquote: true
+    format: p h2 h3
+
+_inputs:
+  _schema:
+    hidden: true
+  title:
+    type: text
+  description:
+    type: textarea
+    comment: Used in search results and link previews.
+  content_blocks:
+    type: array
+    label: Sections
+    options:
+      structures:
+        values_from_glob:
+          - /src/components/blocks/*.cloudcannon.structure-value.yml
+  name:
+    type: text
+  role:
+    type: text
+  company:
+    type: text
+  photo:
+    type: image
+  photo_alt:
+    type: text
+    label: Photo description
+
+_structures:
+  sessions:
+    values:
+      - label: Session
+        icon: schedule
+        picker_preview:
+          text:
+            - Session
+          icon:
+            - schedule
+        preview:
+          text:
+            - key: title
+            - Session
+          subtext:
+            - key: time
+          icon:
+            - schedule
+        value:
+          time: '09:00'
+          title: New session
+          speaker:
+          location:
+          description:
+        _inputs:
+          time:
+            type: text
+            comment: Shown as written, such as 09:00.
+          title:
+            type: text
+          speaker:
+            type: select
+            comment: Leave empty for breaks.
+            options:
+              values: collections.speakers
+              value_key: filename_without_ext
+              allow_empty: true
+              preview:
+                text:
+                  - key: name
+          location:
+            type: text
+          description:
+            type: textarea
+  tiers:
+    values:
+      - label: Ticket type
+        icon: sell
+        picker_preview:
+          text:
+            - Ticket type
+          icon:
+            - sell
+        preview:
+          text:
+            - key: name
+            - Ticket type
+          subtext:
+            - key: price
+          icon:
+            - sell
+        value:
+          name: New ticket
+          price: $0
+          description:
+          button:
+            label: Buy now
+            url:
+        _inputs:
+          name:
+            type: text
+          price:
+            type: text
+          description:
+            type: textarea
+          button:
+            type: object
+            options:
+              preview:
+                icon: link
+          button.label:
+            type: text
+          button.url:
+            type: url
+  faq_items:
+    values:
+      - label: Question
+        icon: help
+        picker_preview:
+          text:
+            - Question
+          icon:
+            - help
+        preview:
+          text:
+            - key: question
+            - Question
+          icon:
+            - help
+        value:
+          question: New question
+          answer: Answer
+        _inputs:
+          question:
+            type: text
+          answer:
+            type: textarea
+  links:
+    values:
+      - label: Link
+        icon: link
+        picker_preview:
+          text:
+            - Link
+          icon:
+            - link
+        preview:
+          text:
+            - key: label
+            - Link
+          subtext:
+            - key: url
+          icon:
+            - link
+        value:
+          label: New link
+          url: /
+        _inputs:
+          label:
+            type: text
+          url:
+            type: url
+
+file_config:
+  - glob: src/data/site.json
+    _inputs:
+      title:
+        type: text
+        label: Site name
+      description:
+        type: textarea
+        comment: The default description for search results and link previews.
+      nav:
+        type: array
+        label: Navigation
+        options:
+          structures: _structures.links
+      cta:
+        type: object
+        label: Header button
+        options:
+          preview:
+            icon: ads_click
+      cta.label:
+        type: text
+      cta.url:
+        type: url
+      footer_text:
+        type: textarea
+      footer_links:
+        type: array
+        options:
+          structures: _structures.links
+  - glob: src/data/event.json
+    _inputs:
+      name:
+        type: text
+        label: Event name
+      date:
+        type: text
+        comment: Shown as written, such as Friday 14 May 2027.
+      venue:
+        type: text
+      address:
+        type: text
+  - glob: src/data/chat.json
+    _inputs:
+      greeting:
+        type: textarea
+        comment: The assistant's first message.
+      placeholder:
+        type: text
+        label: Input placeholder
+      suggestions:
+        type: array
+        comment: Questions visitors can click to ask.
+      suggestions[*]:
+        type: text
+      unavailable_message:
+        type: textarea
+        comment: Shown when the assistant can't answer, such as on a preview without a server.
+      instructions:
+        type: textarea
+        label: Extra instructions for the assistant
+        comment: The assistant already answers from the site's content. Add tone or topics to steer it.

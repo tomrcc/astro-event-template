@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+	const speakers = await getCollection('speakers');
+	return speakers.map((speaker) => ({ params: { slug: speaker.id }, props: { speaker } }));
+}
+
+const { speaker } = Astro.props;
+const { data } = speaker;
+const { Content } = await render(speaker);
+---
+<Base title={data.name} description={[data.role, data.company].filter(Boolean).join(', ')}>
+	<article class="section speaker-page">
+		{data.photo && (
+			<img class="speaker-photo" src={data.photo} alt={data.photo_alt ?? ''} data-editable="image" data-prop-src="photo" data-prop-alt="photo_alt" />
+		)}
+		<div>
+			<h1 data-editable="text" data-prop="name">{data.name}</h1>
+			<p class="speaker-role">
+				{data.role && <span data-editable="text" data-prop="role">{data.role}</span>}
+				{data.role && data.company && ', '}
+				{data.company && <span data-editable="text" data-prop="company">{data.company}</span>}
+			</p>
+			<div class="prose" data-editable="text" data-prop="@content">
+				<Content />
+			</div>
+		</div>
+	</article>
+</Base>

@@ -1,0 +1,33 @@
+{
+  "title": "Signal & Noise 2027",
+  "description": "A one-day conference on building calm, fast, accessible websites.",
+  "nav": [
+    {
+      "label": "Speakers",
+      "url": "/#speakers"
+    },
+    {
+      "label": "Schedule",
+      "url": "/#schedule"
+    },
+    {
+      "label": "Contact",
+      "url": "/contact/"
+    }
+  ],
+  "cta": {
+    "label": "Get tickets",
+    "url": "/#tickets"
+  },
+  "footer_text": "Signal & Noise is an independent, volunteer-run conference.",
+  "footer_links": [
+    {
+      "label": "Code of conduct",
+      "url": "/code-of-conduct/"
+    },
+    {
+      "label": "Contact",
+      "url": "/contact/"
+    }
+  ]
+}

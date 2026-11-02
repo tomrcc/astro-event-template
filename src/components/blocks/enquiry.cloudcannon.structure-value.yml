@@ -1,0 +1,42 @@
+label: Enquiry form
+icon: mail
+picker_preview:
+  text:
+    - Enquiry form
+  icon:
+    - mail
+preview:
+  text:
+    - key: heading
+    - Enquiry form
+  icon:
+    - mail
+value:
+  _type: enquiry
+  heading: Send us a message
+  intro:
+  name_label: Your name
+  email_label: Email
+  message_label: Message
+  button_label: Send message
+  success_message: Thanks! We'll be in touch soon.
+  error_message: Sorry, that didn't send. Please try again.
+_inputs:
+  heading:
+    type: text
+  intro:
+    type: textarea
+  name_label:
+    type: text
+  email_label:
+    type: text
+  message_label:
+    type: text
+  button_label:
+    type: text
+  success_message:
+    type: text
+    comment: Shown after a message sends.
+  error_message:
+    type: text
+    comment: Shown if a message fails to send.

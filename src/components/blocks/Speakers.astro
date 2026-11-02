@@ -1,0 +1,25 @@
+---
+import type { BlockProps } from '../../content.config';
+import { getCollection } from 'astro:content';
+
+type Props = BlockProps<'speakers'>;
+
+const { heading, intro, speakers } = Astro.props;
+const entries = await getCollection('speakers');
+const selected = (speakers ?? []).flatMap((slug) => entries.find((entry) => entry.id === slug) ?? []);
+---
+<section class="section" id="speakers">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	{intro && <p class="section-intro" data-editable="text" data-prop="intro">{intro}</p>}
+	<ul class="speaker-grid">
+		{selected.map((speaker) => (
+			<li class="speaker-card">
+				<a href={`/speakers/${speaker.id}/`}>
+					{speaker.data.photo && <img src={speaker.data.photo} alt={speaker.data.photo_alt ?? ''} loading="lazy" />}
+					<span class="speaker-name">{speaker.data.name}</span>
+				</a>
+				<span class="speaker-role">{[speaker.data.role, speaker.data.company].filter(Boolean).join(', ')}</span>
+			</li>
+		))}
+	</ul>
+</section>

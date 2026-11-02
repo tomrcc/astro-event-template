@@ -1,0 +1,19 @@
+---
+import type { BlockProps } from '../../content.config';
+import { editorBuild } from '../../lib/editor-build';
+
+type Props = BlockProps<'faq'>;
+
+const { heading, items } = Astro.props;
+---
+<section class="section" id="faq">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	<div class="faq" data-editable="array" data-prop="items">
+		{(items ?? []).map((item) => (
+			<details class="faq-item" data-editable="array-item" open={editorBuild}>
+				<summary data-editable="text" data-prop="question">{item.question}</summary>
+				<p data-editable="text" data-prop="answer">{item.answer}</p>
+			</details>
+		))}
+	</div>
+</section>

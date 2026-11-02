@@ -1,0 +1,39 @@
+---
+import type { BlockProps } from '../../content.config';
+import SeatsLeft from '../server/SeatsLeft.astro';
+import SeatsLeftView from '../server/SeatsLeftView.astro';
+import ServerPreview from '../server/ServerPreview.astro';
+import { editorBuild } from '../../lib/editor-build';
+
+type Props = BlockProps<'tickets'>;
+
+const { heading, intro, seats_label, sold_out_label, tiers } = Astro.props;
+---
+<section class="section" id="tickets">
+	{heading && <h2 data-editable="text" data-prop="heading">{heading}</h2>}
+	{intro && <p class="section-intro" data-editable="text" data-prop="intro">{intro}</p>}
+	<div class="availability">
+		{editorBuild ? (
+			<div>
+				<SeatsLeftView seats={42} seats_label={seats_label} sold_out_label={sold_out_label} />
+				<ServerPreview note="The live site shows the real seat count from the ticketing system. 42 is an example. Edit the wording in the sidebar." />
+			</div>
+		) : (
+			<SeatsLeft server:defer seats_label={seats_label} sold_out_label={sold_out_label}>
+				<p slot="fallback" class="seats-left is-loading">Checking availability…</p>
+			</SeatsLeft>
+		)}
+	</div>
+	<ul class="tier-grid" data-editable="array" data-prop="tiers">
+		{(tiers ?? []).map((tier) => (
+			<li class="tier" data-editable="array-item">
+				<h3 data-editable="text" data-prop="name">{tier.name}</h3>
+				<p class="tier-price" data-editable="text" data-prop="price">{tier.price}</p>
+				{tier.description && <p data-editable="text" data-prop="description">{tier.description}</p>}
+				{tier.button?.label?.trim() && (
+					<a class="button" href={tier.button.url || '/'} data-editable="text" data-prop="button.label">{tier.button.label}</a>
+				)}
+			</li>
+		))}
+	</ul>
+</section>

@@ -16,13 +16,18 @@ const { note } = Astro.props;
 		</button>
 		<span class="server-preview-note" role="tooltip">{note || 'Editor preview. On the live site, this part comes from the server.'}</span>
 		{/* Inline so the badge's CSS and JS ship only in the editor build. */}
+		{/* CloudCannon puts .cms-editor-active on <body> in the Visual Editor, so the badge stays hidden on the hosted static copy. */}
 		<style is:inline>
-			:has(> .server-preview) {
+			.cms-editor-active :has(> .server-preview) {
 				position: relative;
 				outline: 1px dashed rgb(124 58 237 / 0.45);
 				outline-offset: 6px;
 			}
 			.server-preview {
+				display: none;
+			}
+			.cms-editor-active .server-preview {
+				display: block;
 				position: absolute;
 				top: -0.75rem;
 				right: -0.75rem;

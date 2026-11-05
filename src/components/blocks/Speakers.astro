@@ -1,11 +1,11 @@
 ---
 import type { BlockProps } from '../../content.config';
-import { getCollection } from 'astro:content';
+import { getSpeakers } from '../../lib/speakers';
 
 type Props = BlockProps<'speakers'>;
 
 const { heading, intro, speakers } = Astro.props;
-const entries = (await getCollection('speakers')).map((entry) => ({ ...entry, id: entry.id.replace(/\.md$/, '') }));
+const entries = await getSpeakers();
 const selected = (speakers ?? []).flatMap((slug) => entries.find((entry) => entry.id === slug) ?? []);
 ---
 <section class="section" id="speakers">

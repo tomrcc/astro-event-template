@@ -1,11 +1,11 @@
 ---
 import type { BlockProps } from '../../content.config';
-import { getCollection } from 'astro:content';
+import { getSpeakers } from '../../lib/speakers';
 
 type Props = BlockProps<'schedule'>;
 
 const { heading, sessions } = Astro.props;
-const speakers = await getCollection('speakers');
+const speakers = await getSpeakers();
 const speakerName = (slug: string | null | undefined) => speakers.find((entry) => entry.id === slug)?.data.name;
 ---
 <section class="section" id="schedule">
